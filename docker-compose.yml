@@ -1,17 +1,30 @@
-#app:
-#  build: code
-#  volumes:
-#    - ./scraper:/opt/app/scraper
-#  tty: true
-#
-#php:
-#  image: php:5.6-cli
-#  volumes_from:
-#    - app
-#  links:
-#    - influxdb
-#    - amqp
-#    - tokenscraper
+app:
+  build: code
+  volumes:
+    - ../tickets-parser-app:/opt/app/scraper
+  tty: true
+
+php:
+  image: eugenegp/php:5.6-cli
+  volumes_from:
+    - app
+  links:
+    - influxdb
+    - amqp
+    - tokenapi
+  tty: true
+
+sales:
+  image: eugenegp/php:5.6-cli
+  volumes:
+    - ${PWD}/sales/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
+  volumes_from:
+    - app
+  links:
+    - influxdb
+    - amqp
+    - tokenapi
+  command: php /opt/app/scraper/console.php sales:start
 
 grafana:
   image: grafana/grafana:2.5.0
@@ -48,9 +61,9 @@ amqp:
     RABBITMQ_DEFAULT_PASS: guest
   volumes:
     - "./rabbitmq:/var/lib/rabbitmq"
-#
-#tokenscraper:
-#  hostname: tokenscraper
-#    image: eugenegp/token-scraper
-#    ports:
-#      - 8666:8666
+
+tokenapi:
+  hostname: tokenscraper
+  image: eugenegp/token-scraper:0.1
+  ports:
+    - 8666:8666

@@ -1,14 +1,16 @@
-FROM eugenegp/phantomjs:2.0
+FROM pataquets/phantomjs
 
 MAINTAINER eugeneiso
 
 ENV TOKEN_SCRAPER_VERSION 0.1
 
-RUN mkdir -p /opt/app/token-scraper
+RUN mkdir -p /opt/app
 
-COPY to token-scraper.js /opt/app/token-scraper
+ADD token-scraper.js /opt/app/token-scraper.js
 
-WORKDIR /opt/app/token-scraper
+WORKDIR /opt/app
+
+EXPOSE 8666
 
 # Default command
-CMD ["/usr/bin/phantomjs", "token-scraper.js", "8666"]
+CMD ["/usr/local/bin/phantomjs", "token-scraper.js", "8666"]
