@@ -1,20 +1,10 @@
 app:
   build: code
   volumes:
-    - ../tickets-parser-app:/opt/app/scraper
+    - ../uzticketstat:/opt/app/scraper
   tty: true
 
 php:
-  image: eugenegp/php:5.6-cli
-  volumes_from:
-    - app
-  links:
-    - influxdb
-    - amqp
-    - tokenapi
-  tty: true
-
-sales:
   image: eugenegp/php:5.6-cli
   volumes:
     - ${PWD}/sales/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
@@ -24,7 +14,16 @@ sales:
     - influxdb
     - amqp
     - tokenapi
-  command: php /opt/app/scraper/console.php sales:start
+  tty: true
+
+sales:
+  extends:
+    file: sales_${RW_ENV}.yml
+    service: sales
+  links:
+    - influxdb
+    - amqp
+    - tokenapi
 
 grafana:
   image: grafana/grafana:2.5.0
@@ -64,6 +63,6 @@ amqp:
 
 tokenapi:
   hostname: tokenscraper
-  image: eugenegp/token-scraper:0.1
+  image: eugenegp/token:0.1.1
   ports:
     - 8666:8666

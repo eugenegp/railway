@@ -1,6 +1,6 @@
 FROM eugenegp/php:5.6-cli
 
-ENV RAILWAY_SALES_VERSION 0.1
+ENV RAILWAY_SALES_VERSION 0.1.1
 
 MAINTAINER Eugene Stepanov <eugeneiso@gmail.com>
 
@@ -12,6 +12,9 @@ RUN cd /tmp && tar -xzvf v${RAILWAY_SALES_VERSION}.tar.gz && \
     cd /opt/app/scraper && ls && \
     composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader && \
     rm -rf /tmp/*
-
+ADD timezone.ini /usr/local/etc/php/conf.d/timezone.ini
 
 WORKDIR /opt/app/scraper
+
+# Default command
+CMD ["php", "/opt/app/scraper/console.php", "sales:start"]

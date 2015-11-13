@@ -1,0 +1,7 @@
+sales:
+  image: eugenegp/php:5.6-cli
+  volumes:
+    - ${PWD}/sales/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
+  volumes_from:
+    - app
+  command: php /opt/app/scraper/console.php sales:start
