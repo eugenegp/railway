@@ -1,2 +1,7 @@
 sales:
   image: eugenegp/sales:0.1.1
+
+redis:
+
+tokenapi:
+
