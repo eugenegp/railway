@@ -1,6 +1,6 @@
 FROM eugenegp/php:5.6-cli
 
-ENV RAILWAY_SALES_VERSION 0.1.1
+ENV RAILWAY_SALES_VERSION 0.1.2
 
 MAINTAINER Eugene Stepanov <eugeneiso@gmail.com>
 
@@ -17,4 +17,4 @@ ADD timezone.ini /usr/local/etc/php/conf.d/timezone.ini
 WORKDIR /opt/app/scraper
 
 # Default command
-CMD ["php", "/opt/app/scraper/console.php", "sales:start"]
+CMD ["php", "/opt/app/scraper/console", "sales:start"]

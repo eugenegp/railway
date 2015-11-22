@@ -1,7 +1,7 @@
 app:
   build: code
   volumes:
-    - ../uzticketstat:/opt/app/scraper
+    - ${RW_SOURCE}:/opt/app/scraper
   tty: true
 
 php:
@@ -18,8 +18,10 @@ php:
 
 sales:
   extends:
-    file: sales_${RW_ENV}.yml
+    file: docker-compose_${RW_ENV}.yml
     service: sales
+#  volumes_from: // DEV MODE
+#    - app
   links:
     - influxdb
     - amqp
@@ -62,7 +64,17 @@ amqp:
     - "./rabbitmq:/var/lib/rabbitmq"
 
 tokenapi:
+  extends:
+    file: docker-compose_${RW_ENV}.yml
+    service: tokenapi
   hostname: tokenscraper
-  image: eugenegp/token:0.1.1
-  ports:
-    - 8666:8666
+  image: eugenegp/token:0.1.4
+  links:
+   - redis
+
+redis:
+  extends:
+    file: docker-compose_${RW_ENV}.yml
+    service: redis
+  hostname: redis
+  image: redis
